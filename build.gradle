@@ -14,9 +14,10 @@
  */
 
 plugins {
-	id 'java'
-	id 'application'
-	id 'eclipse'
+	id "java"
+	id "application"
+	id "eclipse"
+	id "org.panteleyev.jpackageplugin" version "1.6.0"
 }
 
 compileJava {
@@ -155,6 +156,31 @@ task allJars {
 	dependsOn macxJar
 }
 
+task copyDependencies(type: Copy) {
+	from configurations.runtimeClasspath
+	into "${buildDir}/jpackage-app"
+}
+
+task copyJar(type: Copy) {
+	from tasks.jar
+	into "${buildDir}/jpackage-app"
+}
+
+tasks.jpackage {
+	dependsOn("build", "copyDependencies", "copyJar")
+	input = "${buildDir}/jpackage-app"
+	destination = "${buildDir}/dist"
+	appName = "BrailleZephyr"
+	vendor = "American Printing House for the Blind"
+	mainJar = tasks.jar.archiveFileName.get()
+	mainClass = application.mainClass.get()
+	javaOptions = application.applicationDefaultJvmArgs
+	windows {
+		winDirChooser = true
+		winMenu = true
+	}
+	addModules = [ "java.desktop" ]
+}
 run {
 	systemProperties['braillezephyr.version'] = version
 }
