@@ -69,7 +69,7 @@ ext.defaultManifest = java.manifest {
 	           "Implementation-Version": version)
 }
 
-jar {
+tasks.jar {
 	manifest = project.java.manifest {
 		from(defaultManifest)
 	}
@@ -148,7 +148,7 @@ tasks.register("macxJar", Jar) {
 }
 
 tasks.register("allJars") {
-	dependsOn(linux32Jar, linux64Jar, win32Jar, win64Jar, macxJar)
+	dependsOn("linux32Jar", "linux64Jar", "win32Jar", "win64Jar", "macxJar")
 }
 
 tasks.register("copyDependencies", Copy) {
@@ -180,7 +180,7 @@ run {
 	systemProperties["braillezephyr.version"] = version
 }
 
-wrapper {
+tasks.wrapper {
 	gradleVersion = "8.5"
 }
 
