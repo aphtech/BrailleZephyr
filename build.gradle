@@ -78,7 +78,7 @@ jar {
 	archiveBaseName = 'BrailleZephyr'
 }
 
-task linux32Jar(type: Jar) {
+tasks.register('linux32Jar', Jar) {
 	archiveAppendix = 'linux-x86'
 
 	manifest = project.java.manifest {
@@ -92,7 +92,7 @@ task linux32Jar(type: Jar) {
 	with jar
 }
 
-task linux64Jar(type: Jar) {
+tasks.register('linux64Jar', Jar) {
 	archiveAppendix = 'linux-x86_64'
 
 	manifest = project.java.manifest {
@@ -106,7 +106,7 @@ task linux64Jar(type: Jar) {
 	with jar
 }
 
-task win32Jar(type: Jar) {
+tasks.register('win32Jar', Jar) {
 	archiveAppendix = 'windows-x86'
 
 	manifest = project.java.manifest {
@@ -120,7 +120,7 @@ task win32Jar(type: Jar) {
 	with jar
 }
 
-task win64Jar(type: Jar) {
+tasks.register('win64Jar', Jar) {
 	archiveAppendix = 'windows-x86_64'
 
 	manifest = project.java.manifest {
@@ -134,7 +134,7 @@ task win64Jar(type: Jar) {
 	with jar
 }
 
-task macxJar(type: Jar) {
+tasks.register('macxJar', Jar) {
 	archiveAppendix = 'macosx-x86_64'
 
 	manifest = project.java.manifest {
@@ -148,7 +148,7 @@ task macxJar(type: Jar) {
 	with jar
 }
 
-task allJars {
+tasks.register('allJars') {
 	dependsOn linux32Jar
 	dependsOn linux64Jar
 	dependsOn win32Jar
@@ -156,12 +156,12 @@ task allJars {
 	dependsOn macxJar
 }
 
-task copyDependencies(type: Copy) {
+tasks.register('copyDependencies', Copy) {
 	from configurations.runtimeClasspath
 	into "${buildDir}/jpackage-app"
 }
 
-task copyJar(type: Copy) {
+tasks.register('copyJar', Copy) {
 	from tasks.jar
 	into "${buildDir}/jpackage-app"
 }
@@ -174,7 +174,7 @@ tasks.jpackage {
 	vendor = "American Printing House for the Blind"
 	mainJar = tasks.jar.archiveFileName.get()
 	mainClass = application.mainClass.get()
-	javaOptions = application.applicationDefaultJvmArgs
+	javaOptions = application.applicationDefaultJvmArgs.asList()
 	windows {
 		winDirChooser = true
 		winMenu = true
