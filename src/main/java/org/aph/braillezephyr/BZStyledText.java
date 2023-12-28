@@ -16,20 +16,8 @@
 package org.aph.braillezephyr;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CaretEvent;
-import org.eclipse.swt.custom.CaretListener;
-import org.eclipse.swt.custom.ExtendedModifyEvent;
-import org.eclipse.swt.custom.ExtendedModifyListener;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.StyledTextContent;
-import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
@@ -38,24 +26,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import javax.sound.sampled.*;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -973,7 +945,7 @@ public class BZStyledText
 	{
 		//   write first line
 		String line = content.getLine(0);
-		if(line.length() > 0 && line.charAt(line.length() - 1) == PARAGRAPH_END)
+		if(!line.isEmpty() && line.charAt(line.length() - 1) == PARAGRAPH_END)
 			writer.write(line.substring(0, line.length() - 1));
 		else
 			writer.write(line);
@@ -985,7 +957,7 @@ public class BZStyledText
 			if(isFirstLineOnPage(i))
 				writer.write(0xc);
 			line = content.getLine(i);
-			if(line.length() > 0 && line.charAt(line.length() - 1) == PARAGRAPH_END)
+			if(!line.isEmpty() && line.charAt(line.length() - 1) == PARAGRAPH_END)
 				writer.write(line.substring(0, line.length() - 1));
 			else
 				writer.write(line);
@@ -1066,7 +1038,7 @@ public class BZStyledText
 		//   read first line, may be null for empty document
 		if((line = buffer.readLine()) != null)
 		{
-			if(line.length() > 0 && line.charAt(line.length() - 1) == 0xb6)
+			if(!line.isEmpty() && line.charAt(line.length() - 1) == 0xb6)
 				content.replaceTextRange(0, 0, line.substring(0, line.length() - 1) + PARAGRAPH_END);
 			else
 				content.replaceTextRange(0, 0, line);
@@ -1075,7 +1047,7 @@ public class BZStyledText
 			while((line = buffer.readLine()) != null)
 			{
 				content.replaceTextRange(content.getCharCount(), 0, eol);
-				if(line.length() > 0 && line.charAt(line.length() - 1) == 0xb6)
+				if(!line.isEmpty() && line.charAt(line.length() - 1) == 0xb6)
 					content.replaceTextRange(content.getCharCount(), 0, line.substring(0, line.length() - 1) + PARAGRAPH_END);
 				else
 					content.replaceTextRange(content.getCharCount(), 0, line);
@@ -1117,7 +1089,7 @@ public class BZStyledText
 			writer.write("ascii" + eol);
 
 		if(content.getCharCount() > 0)
-			writer.write("ReturnAtEnd " + (content.getLine(content.getLineCount() - 1).length() == 0) + eol);
+			writer.write("ReturnAtEnd " + (content.getLine(content.getLineCount() - 1).isEmpty()) + eol);
 		else
 			writer.write("ReturnAtEnd false" + eol);
 
@@ -1125,7 +1097,7 @@ public class BZStyledText
 
 		//   write first line
 		String line = content.getLine(0);
-		if(line.length() > 0 && line.charAt(line.length() - 1) == PARAGRAPH_END)
+		if(!line.isEmpty() && line.charAt(line.length() - 1) == PARAGRAPH_END)
 			writer.write(line.substring(0, line.length() - 1) + (char)0xb6);
 		else
 			writer.write(line);
@@ -1135,7 +1107,7 @@ public class BZStyledText
 		{
 			writer.write(eol);
 			line = content.getLine(i);
-			if(line.length() > 0 && line.charAt(line.length() - 1) == PARAGRAPH_END)
+			if(!line.isEmpty() && line.charAt(line.length() - 1) == PARAGRAPH_END)
 				writer.write(line.substring(0, line.length() - 1) + (char)0xb6);
 			else
 				writer.write(line);
@@ -1163,7 +1135,7 @@ public class BZStyledText
 		for(int i = content.getLineAtOffset(currentText.getCaretOffset()); i < content.getLineCount(); i++)
 		{
 			String line = content.getLine(i);
-			if(line.length() == 0)
+			if(line.isEmpty())
 				continue;
 
 			//   line too long
@@ -1212,7 +1184,7 @@ public class BZStyledText
 
 				content.replaceTextRange(content.getOffsetAtLine(i), length, stringBuilder.toString());
 			}
-			else if(line.length() > 0 && line.charAt(line.length() - 1) == PARAGRAPH_END)
+			else if(!line.isEmpty() && line.charAt(line.length() - 1) == PARAGRAPH_END)
 				break;
 		}
 
@@ -1466,7 +1438,7 @@ public class BZStyledText
 
 				//   draw paragraph end markers
 				String line = source.getLine(i);
-				if(line.length() > 0 && line.charAt(line.length() - 1) == PARAGRAPH_END)
+				if(!line.isEmpty() && line.charAt(line.length() - 1) == PARAGRAPH_END)
 				{
 					Point point = event.gc.stringExtent(line);
 					int span = point.y / 2;
@@ -1598,9 +1570,9 @@ public class BZStyledText
 				event.doit = false;
 				int index = styledText.getLineAtOffset(styledText.getCaretOffset());
 				String line = styledText.getLine(index);
-				if(line.length() > 0)
+				if(!line.isEmpty())
 				if(line.charAt(line.length() - 1) != PARAGRAPH_END)
-					styledText.replaceTextRange(styledText.getOffsetAtLine(index), line.length(), line + Character.toString(PARAGRAPH_END));
+					styledText.replaceTextRange(styledText.getOffsetAtLine(index), line.length(), line + PARAGRAPH_END);
 				else
 					styledText.replaceTextRange(styledText.getOffsetAtLine(index), line.length(), line.substring(0, line.length() - 1));
 				return;

@@ -164,7 +164,7 @@ public final class BZSettings extends BZBase
 
 	private boolean readLine(String line)
 	{
-		if(line.length() == 0)
+		if(line.isEmpty())
 			return true;
 
 		int offset = line.indexOf(' ');
@@ -172,7 +172,7 @@ public final class BZSettings extends BZBase
 			return false;
 
 		String value = line.substring(offset + 1);
-		if(value.length() < 1)
+		if(value.isEmpty())
 			return false;
 
 		String tokens[];
@@ -184,7 +184,7 @@ public final class BZSettings extends BZBase
 			if(tokens.length != 3)
 				return false;
 			shellSize = new Point(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
-			shellMaximized = Boolean.valueOf(tokens[2]);
+			shellMaximized = Boolean.parseBoolean(tokens[2]);
 			break;
 
 		case "charsPerLine":  bzStyledText.setCharsPerLine(Integer.parseInt(value));  break;
@@ -263,7 +263,7 @@ public final class BZSettings extends BZBase
 			}
 			break;
 
-		case "brailleText.visible":  bzStyledText.setBrailleVisible(Boolean.valueOf(value));  break;
+		case "brailleText.visible":  bzStyledText.setBrailleVisible(Boolean.parseBoolean(value));  break;
 		case "brailleText.font":
 
 			//   find offset for fileName
@@ -282,7 +282,7 @@ public final class BZSettings extends BZBase
 			                                     Integer.parseInt(tokens[1])));
 			break;
 
-		case "asciiText.visible":  bzStyledText.setAsciiVisible(Boolean.valueOf(value));  break;
+		case "asciiText.visible":  bzStyledText.setAsciiVisible(Boolean.parseBoolean(value));  break;
 		case "asciiText.font":
 
 			//   find offset for fileName

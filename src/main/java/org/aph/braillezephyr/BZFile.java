@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * <p>
@@ -175,7 +176,7 @@ public final class BZFile extends BZBase
 
 			if(fileName.endsWith("brf"))
 			{
-				writer = new OutputStreamWriter(new FileOutputStream(fileName), Charset.forName("US-ASCII"));
+				writer = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.US_ASCII);
 				bzStyledText.writeBRF(writer);
 			}
 			else if(fileName.endsWith("bzy"))
