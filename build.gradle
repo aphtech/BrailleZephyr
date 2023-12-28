@@ -56,12 +56,12 @@ configurations {
 }
 
 dependencies {
-	implementation group: "org.eclipse.swt", name: swtJar, version: "4.+"
-	linuxX64 group: "org.eclipse.swt", name: "org.eclipse.swt.gtk.linux.x86_64", version: "4.+"
-	linuxX86 group: "org.eclipse.swt", name: "org.eclipse.swt.gtk.linux.x86", version: "4.+"
-	winX64 group: "org.eclipse.swt", name: "org.eclipse.swt.win32.win32.x86_64", version: "4.+"
-	winX86 group: "org.eclipse.swt", name: "org.eclipse.swt.win32.win32.x86", version: "4.+"
-	macosxX64 group: "org.eclipse.swt", name: "org.eclipse.swt.cocoa.macosx.x86_64", version: "4.+"
+	implementation("org.eclipse.swt:${swtJar}:4.+")
+	linuxX64("org.eclipse.swt:org.eclipse.swt.gtk.linux.x86_64:4.+")
+	linuxX86("org.eclipse.swt:org.eclipse.swt.gtk.linux.x86:4.+")
+	winX64("org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64:4.+")
+	winX86("org.eclipse.swt:org.eclipse.swt.win32.win32.x86:4.+")
+	macosxX64("org.eclipse.swt:org.eclipse.swt.cocoa.macosx.x86_64:4.+")
 }
 
 ext.defaultManifest = java.manifest {
@@ -71,7 +71,7 @@ ext.defaultManifest = java.manifest {
 
 jar {
 	manifest = project.java.manifest {
-		from defaultManifest
+		from(defaultManifest)
 	}
 
 	archiveBaseName = "BrailleZephyr"
@@ -81,88 +81,84 @@ tasks.register("linux32Jar", Jar) {
 	archiveAppendix = "linux-x86"
 
 	manifest = project.java.manifest {
-		from defaultManifest
+		from(defaultManifest)
 	}
 
 	from {
 		configurations.linuxX86.collect { zipTree(it) }
 	}
 
-	with jar
+	with(jar)
 }
 
 tasks.register("linux64Jar", Jar) {
 	archiveAppendix = "linux-x86_64"
 
 	manifest = project.java.manifest {
-		from defaultManifest
+		from(defaultManifest)
 	}
 
 	from {
 		configurations.linuxX64.collect { zipTree(it) }
 	}
 
-	with jar
+	with(jar)
 }
 
 tasks.register("win32Jar", Jar) {
 	archiveAppendix = "windows-x86"
 
 	manifest = project.java.manifest {
-		from defaultManifest
+		from(defaultManifest)
 	}
 
 	from {
 		configurations.winX86.collect { zipTree(it) }
 	}
 
-	with jar
+	with(jar)
 }
 
 tasks.register("win64Jar", Jar) {
 	archiveAppendix = "windows-x86_64"
 
 	manifest = project.java.manifest {
-		from defaultManifest
+		from(defaultManifest)
 	}
 
 	from {
 		configurations.winX64.collect { zipTree(it) }
 	}
 
-	with jar
+	with(jar)
 }
 
 tasks.register("macxJar", Jar) {
-	archiveAppendix = 'macosx-x86_64'
+	archiveAppendix = "macosx-x86_64"
 
 	manifest = project.java.manifest {
-		from defaultManifest
+		from(defaultManifest)
 	}
 
 	from {
 		configurations.macosxX64.collect { zipTree(it) }
 	}
 
-	with jar
+	with(jar)
 }
 
 tasks.register("allJars") {
-	dependsOn(linux32Jar)
-	dependsOn(linux64Jar)
-	dependsOn(win32Jar)
-	dependsOn(win64Jar)
-	dependsOn(macxJar)
+	dependsOn(linux32Jar, linux64Jar, win32Jar, win64Jar, macxJar)
 }
 
 tasks.register("copyDependencies", Copy) {
-	from configurations.runtimeClasspath
-	into "${buildDir}/jpackage-app"
+	from(configurations.runtimeClasspath)
+	into("${buildDir}/jpackage-app")
 }
 
 tasks.register("copyJar", Copy) {
-	from tasks.jar
-	into "${buildDir}/jpackage-app"
+	from(tasks.jar)
+	into("${buildDir}/jpackage-app")
 }
 
 tasks.jpackage {
@@ -174,11 +170,11 @@ tasks.jpackage {
 	mainJar = tasks.jar.archiveFileName.get()
 	mainClass = application.mainClass.get()
 	javaOptions = application.applicationDefaultJvmArgs.asList()
+	addModules = [ "java.desktop" ]
 	windows {
 		winDirChooser = true
 		winMenu = true
 	}
-	addModules = [ "java.desktop" ]
 }
 run {
 	systemProperties["braillezephyr.version"] = version
