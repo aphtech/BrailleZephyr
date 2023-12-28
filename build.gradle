@@ -153,18 +153,18 @@ tasks.register("allJars") {
 
 tasks.register("copyDependencies", Copy) {
 	from(configurations.runtimeClasspath)
-	into("${buildDir}/jpackage-app")
+	into("${layout.buildDirectory.get()}/jpackage-app")
 }
 
 tasks.register("copyJar", Copy) {
 	from(tasks.jar)
-	into("${buildDir}/jpackage-app")
+	into("${layout.buildDirectory.get()}/jpackage-app")
 }
 
 tasks.jpackage {
 	dependsOn("build", "copyDependencies", "copyJar")
-	input = "${buildDir}/jpackage-app"
-	destination = "${buildDir}/dist"
+	input = "${layout.buildDirectory.get()}/jpackage-app"
+	destination = "${layout.buildDirectory.get()}/dist"
 	appName = "BrailleZephyr"
 	vendor = "American Printing House for the Blind"
 	mainJar = tasks.jar.archiveFileName.get()
