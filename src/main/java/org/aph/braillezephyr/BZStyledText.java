@@ -56,6 +56,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +87,7 @@ public class BZStyledText
 
 	private StyledText currentText;
 
-	private String eol = System.getProperty("line.separator");
+	private String eol = System.lineSeparator();
 	private int linesPerPage = 25;
 	private int charsPerLine = 40;
 
@@ -459,7 +461,7 @@ public class BZStyledText
 	                                                           UnsupportedAudioFileException,
 	                                                           LineUnavailableException
 	{
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(fileName));
+		InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(fileName)));
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
 		DataLine.Info dataLineInfo = new DataLine.Info(Clip.class, audioInputStream.getFormat());
 		Clip clip = lineMarginClip;
@@ -547,7 +549,7 @@ public class BZStyledText
 	                                                           UnsupportedAudioFileException,
 	                                                           LineUnavailableException
 	{
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(fileName));
+		InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(fileName)));
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
 		DataLine.Info dataLineInfo = new DataLine.Info(Clip.class, audioInputStream.getFormat());
 		Clip clip = pageMarginClip;
@@ -586,7 +588,7 @@ public class BZStyledText
 	                                                        UnsupportedAudioFileException,
 	                                                        LineUnavailableException
 	{
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(fileName));
+		InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(fileName)));
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
 		DataLine.Info dataLineInfo = new DataLine.Info(Clip.class, audioInputStream.getFormat());
 		Clip clip = lineEndClip;
@@ -1012,7 +1014,7 @@ public class BZStyledText
 		int unknown = 0;
 
 		content.setText("");
-		eol = System.getProperty("line.separator");
+		eol = System.lineSeparator();
 		BufferedReader buffer = new BufferedReader(reader);
 
 		//   read configuration lines

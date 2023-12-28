@@ -433,22 +433,12 @@ public final class BZSettings extends BZBase
 			return false;
 		}
 
-		PrintWriter writer = null;
-		try
-		{
-			writer = new PrintWriter(file);
-			writeLines(writer);
-		}
-		catch(FileNotFoundException exception)
-		{
-			logError("Unable to open settings file for writing", exception);
-			return false;
-		}
-		finally
-		{
-			if(writer != null)
-				writer.close();
-		}
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writeLines(writer);
+        } catch (FileNotFoundException exception) {
+            logError("Unable to open settings file for writing", exception);
+            return false;
+        }
 
 		return true;
 	}
