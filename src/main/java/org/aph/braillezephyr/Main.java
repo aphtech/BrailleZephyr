@@ -32,107 +32,106 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author Mike Gray mgray@aph.org
  */
-public final class Main
-{
-	private final Shell shell;
-	private final BZStyledText bzStyledText;
-	private final BZFile bzFile;
-	private final BZSettings bzSettings;
+public final class Main {
+    private final Shell shell;
+    private final BZStyledText bzStyledText;
+    private final BZFile bzFile;
+    private final BZSettings bzSettings;
 
-	public static void main(String args[])
-	{
-		new Main(args);
-	}
+    public static void main(String[] args) {
+        new Main(args);
+    }
 
-	public Main(String args[])
-	{
-		//   must be before display is created (on Macs at least)
-		Display.setAppName("BrailleZephyr");
+    public Main(String[] args) {
+        //   must be before display is created (on Macs at least)
+        Display.setAppName("BrailleZephyr");
 
-		Display display = Display.getDefault();
+        Display display = Display.getDefault();
 
-		//   needed to catch Quit (Command-Q) on Macs
-		display.addListener(SWT.Close, new CloseHandler());
+        //   needed to catch Quit (Command-Q) on Macs
+        display.addListener(SWT.Close, new CloseHandler());
 
-		shell = new Shell(display);
-		shell.setLayout(new FillLayout());
-		shell.setText("BrailleZephyr");
-		shell.addShellListener(new ShellHandler());
+        shell = new Shell(display);
+        shell.setLayout(new FillLayout());
+        shell.setText("BrailleZephyr");
+        shell.addShellListener(new ShellHandler());
 
-		bzStyledText = new BZStyledText(shell);
-		bzFile = new BZFile(bzStyledText);
-		bzSettings = new BZSettings(bzStyledText);
-		new BZMenu(bzStyledText, bzFile, bzSettings);
+        bzStyledText = new BZStyledText(shell);
+        bzFile = new BZFile(bzStyledText);
+        bzSettings = new BZSettings(bzStyledText);
+        new BZMenu(bzStyledText, bzFile, bzSettings);
 
-		//   assume any argument is a file to open
-		if(args.length > 0)
-			bzFile.openFile(args[0]);
+        //   assume any argument is a file to open
+        if (args.length > 0)
+            bzFile.openFile(args[0]);
 
-		shell.open();
-		while(!shell.isDisposed())
-		if(!display.readAndDispatch())
-			display.sleep();
+        shell.open();
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch())
+                display.sleep();
+        }
 
-		display.dispose();
-	}
+        display.dispose();
+    }
 
-	private boolean checkClosing()
-	{
-		boolean doit = true;
+    private boolean checkClosing() {
+        boolean doit = true;
 
-		//   check if text has been modified
-		if(bzStyledText.getModified())
-		{
-			MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
-			messageBox.setMessage("Would you like to save your changes?");
-			int result = messageBox.open();
-			if(result == SWT.CANCEL)
-				doit = false;
-			else if(result == SWT.YES)
-				doit = bzFile.saveFile();
-		}
+        //   check if text has been modified
+        if (bzStyledText.getModified()) {
+            MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
+            messageBox.setMessage("Would you like to save your changes?");
+            int result = messageBox.open();
+            if (result == SWT.CANCEL)
+                doit = false;
+            else if (result == SWT.YES)
+                doit = bzFile.saveFile();
+        }
 
-		//   write settings file
-		if(doit)
-		if(!bzSettings.writeSettings())
-		{
-			MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
-			messageBox.setMessage("Would you like to exit anyway?");
-			doit = messageBox.open() == SWT.YES;
-		}
+        //   write settings file
+        if (doit) {
+            if (!bzSettings.writeSettings()) {
+                MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
+                messageBox.setMessage("Would you like to exit anyway?");
+                doit = messageBox.open() == SWT.YES;
+            }
+        }
 
-		return doit;
-	}
+        return doit;
+    }
 
-	/**
-	 * <p>
-	 * Needed to catch Quit (Command-Q) on Macs
-	 * </p>
-	 */
-	private class CloseHandler implements Listener
-	{
-		@Override
-		public void handleEvent(Event event)
-		{
-			event.doit = checkClosing();
-		}
-	}
+    /**
+     * <p>
+     * Needed to catch Quit (Command-Q) on Macs
+     * </p>
+     */
+    private class CloseHandler implements Listener {
+        @Override
+        public void handleEvent(Event event) {
+            event.doit = checkClosing();
+        }
+    }
 
-	private class ShellHandler implements ShellListener
-	{
-		@Override
-		public void shellClosed(ShellEvent event)
-		{
-			event.doit = checkClosing();
-		}
+    private class ShellHandler implements ShellListener {
+        @Override
+        public void shellClosed(ShellEvent event) {
+            event.doit = checkClosing();
+        }
 
-		@Override
-		public void shellActivated(ShellEvent ignored){}
-		@Override
-		public void shellDeactivated(ShellEvent ignored){}
-		@Override
-		public void shellDeiconified(ShellEvent ignored){}
-		@Override
-		public void shellIconified(ShellEvent ignored){}
-	}
+        @Override
+        public void shellActivated(ShellEvent ignored) {
+        }
+
+        @Override
+        public void shellDeactivated(ShellEvent ignored) {
+        }
+
+        @Override
+        public void shellDeiconified(ShellEvent ignored) {
+        }
+
+        @Override
+        public void shellIconified(ShellEvent ignored) {
+        }
+    }
 }
