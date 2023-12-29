@@ -6,4 +6,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run jpackage
-        run: gradlew jpackage
+        run: ./gradlew jpackage
