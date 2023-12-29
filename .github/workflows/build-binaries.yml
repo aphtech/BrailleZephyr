@@ -4,5 +4,6 @@ jobs:
     name: Build Windows X86_64
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout/v4
-        run: gradlew jpackage
+    - uses: actions/checkout/v4
+    - name: Run jpackage
+      run: gradlew jpackage
