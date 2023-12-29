@@ -1,0 +1,8 @@
+on: [push]
+jobs:
+  buildWinX64:
+    name: Build Windows X86_64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout/v4
+        run: gradlew jpackage
