@@ -35,24 +35,6 @@ jobs:
       with:
         arguments: jpackage
 
-  buildLinuxAarch64:
-
-    runs-on: ubuntu-latest
-    name: Build Linux aarch64
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          architecture: aarch64
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-        with:
-          arguments: jpackage
-
   buildWinX64:
 
     runs-on: windows-latest
@@ -73,7 +55,7 @@ jobs:
 
   buildMacOsxX64:
 
-    runs-on: macosx-latest
+    runs-on: macos-latest
     name: Build MacOSX X86_64
 
     steps:
