@@ -13,6 +13,17 @@
  * limitations under the License.
  */
 
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("net.java.dev.jna:jna:5.14.0")
+	}
+}
+
+import com.sun.jna.Platform as JnaPlatform
+
 plugins {
 	id "java"
 	id "application"
@@ -30,38 +41,45 @@ application {
 	mainClass = "org.aph.braillezephyr.Main"
 }
 
-String swtJar
-switch(System.getProperty("os.name").toLowerCase().split()[0])
-{
-case "mac":
-	swtJar = "org.eclipse.swt.cocoa.macosx.x86_64"
-	application.applicationDefaultJvmArgs.add("-XstartOnFirstThread")
-	break
-
-case "windows":
-	swtJar = "org.eclipse.swt.win32.win32.x86_64"
-	break
-
-default:
-	swtJar = "org.eclipse.swt.gtk.linux.x86_64"
-	break
+String swtOS
+switch(JnaPlatform.getOSType()) {
+	case JnaPlatform.WINDOWS:
+		swtOS = "win32.win32"
+		break
+	case JnaPlatform.MAC:
+		swtOS = "cocoa.macosx"
+		break
+	case JnaPlatform.LINUX:
+		swtOS = "gtk.linux"
+		break
+	default:
+		throw new RuntimeException("Unsupported OS")
+}
+String swtArch
+if (JnaPlatform.isIntel()) {
+	swtArch = JnaPlatform.is64Bit() ? "x86_64" : "x86"
+} else if (JnaPlatform.isARM() && JnaPlatform.is64Bit()) {
+	swtArch = "aarch64"
+} else {
+	throw new RuntimeException("Unsupported architecture")
 }
 
-configurations {
-	winX86
-	winX64
-	linuxX86
-	linuxX64
-	macosxX64
+String swtVersion = "3.124.+"
+String swtPlatform = "${swtOS}.${swtArch}"
+if (JnaPlatform.isMac()) {
+	application.applicationDefaultJvmArgs.add("-XstartOnFirstThread")
+}
+
+configurations.all {
+	resolutionStrategy {
+		dependencySubstitution {
+			substitute module("org.eclipse.platform:org.eclipse.swt.\${osgi.platform}") using module("org.eclipse.platform:org.eclipse.swt.${swtPlatform}:${swtVersion}")
+		}
+	}
 }
 
 dependencies {
-	implementation("org.eclipse.swt:${swtJar}:4.+")
-	linuxX64("org.eclipse.swt:org.eclipse.swt.gtk.linux.x86_64:4.+")
-	linuxX86("org.eclipse.swt:org.eclipse.swt.gtk.linux.x86:4.+")
-	winX64("org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64:4.+")
-	winX86("org.eclipse.swt:org.eclipse.swt.win32.win32.x86:4.+")
-	macosxX64("org.eclipse.swt:org.eclipse.swt.cocoa.macosx.x86_64:4.+")
+	implementation("org.eclipse.platform:org.eclipse.swt:${swtVersion}")
 }
 
 ext.defaultManifest = java.manifest {
@@ -75,80 +93,6 @@ tasks.jar {
 	}
 
 	archiveBaseName = "BrailleZephyr"
-}
-
-tasks.register("linux32Jar", Jar) {
-	archiveAppendix = "linux-x86"
-
-	manifest = project.java.manifest {
-		from(defaultManifest)
-	}
-
-	from {
-		configurations.linuxX86.collect { zipTree(it) }
-	}
-
-	with(jar)
-}
-
-tasks.register("linux64Jar", Jar) {
-	archiveAppendix = "linux-x86_64"
-
-	manifest = project.java.manifest {
-		from(defaultManifest)
-	}
-
-	from {
-		configurations.linuxX64.collect { zipTree(it) }
-	}
-
-	with(jar)
-}
-
-tasks.register("win32Jar", Jar) {
-	archiveAppendix = "windows-x86"
-
-	manifest = project.java.manifest {
-		from(defaultManifest)
-	}
-
-	from {
-		configurations.winX86.collect { zipTree(it) }
-	}
-
-	with(jar)
-}
-
-tasks.register("win64Jar", Jar) {
-	archiveAppendix = "windows-x86_64"
-
-	manifest = project.java.manifest {
-		from(defaultManifest)
-	}
-
-	from {
-		configurations.winX64.collect { zipTree(it) }
-	}
-
-	with(jar)
-}
-
-tasks.register("macxJar", Jar) {
-	archiveAppendix = "macosx-x86_64"
-
-	manifest = project.java.manifest {
-		from(defaultManifest)
-	}
-
-	from {
-		configurations.macosxX64.collect { zipTree(it) }
-	}
-
-	with(jar)
-}
-
-tasks.register("allJars") {
-	dependsOn("linux32Jar", "linux64Jar", "win32Jar", "win64Jar", "macxJar")
 }
 
 tasks.register("copyDependencies", Copy) {
