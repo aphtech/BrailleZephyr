@@ -107,6 +107,7 @@ tasks.register("copyJar", Copy) {
 
 tasks.jpackage {
 	dependsOn("build", "copyDependencies", "copyJar")
+	verbose = true
 	input = "${layout.buildDirectory.get()}/jpackage-app"
 	destination = "${layout.buildDirectory.get()}/dist"
 	appName = "BrailleZephyr"
