@@ -66,9 +66,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           architecture: x64
-      - name: Add JDK to path
-        run: |
-          echo "$JAVA_HOME/bin/" >> $GITHUB_PATH
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
