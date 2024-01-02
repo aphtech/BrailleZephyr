@@ -123,6 +123,7 @@ tasks.jpackage {
 		winConsole = false
 	}
 	mac {
+		type = org.panteleyev.jpackage.ImageType.APP_IMAGE
 		macAppStore = false
 		macPackageIdentifier = "org.aph.BrailleZephyr"
 		macPackageName = "BrailleZephyr"
