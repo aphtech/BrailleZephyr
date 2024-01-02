@@ -35,7 +35,7 @@ compileJava {
 }
 
 group = "org.aph.braillezephyr"
-version = "0.1"
+version = "1.0"
 
 application {
 	mainClass = "org.aph.braillezephyr.Main"
