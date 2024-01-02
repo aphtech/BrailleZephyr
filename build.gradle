@@ -118,6 +118,15 @@ tasks.jpackage {
 	windows {
 		winDirChooser = true
 		winMenu = true
+		winShortcut = true
+		winShortcutPrompt = true
+		winConsole = false
+	}
+	mac {
+		macAppStore = false
+		macPackageIdentifier = "org.aph.BrailleZephyr"
+		macPackageName = "BrailleZephyr"
+		macSign = false
 	}
 }
 run {
