@@ -110,6 +110,7 @@ tasks.jpackage {
 	input = "${layout.buildDirectory.get()}/jpackage-app"
 	destination = "${layout.buildDirectory.get()}/dist"
 	appName = "BrailleZephyr"
+	appVersion = version
 	vendor = "American Printing House for the Blind"
 	mainJar = tasks.jar.archiveFileName.get()
 	mainClass = application.mainClass.get()
