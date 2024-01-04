@@ -14,132 +14,141 @@
  */
 
 buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("net.java.dev.jna:jna:5.14.0")
-	}
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("net.java.dev.jna:jna:5.14.0")
+    }
 }
 
 import com.sun.jna.Platform as JnaPlatform
 
 plugins {
-	id "java"
-	id "application"
-	id "org.panteleyev.jpackageplugin" version "1.6.0"
+    id "java"
+    id "application"
+    id "maven-publish"
+    id "org.panteleyev.jpackageplugin" version "1.6.0"
 }
 
 compileJava {
-	options.release = 8
+    options.release = 8
 }
 
 group = "org.aph.braillezephyr"
 version = "1.0"
 
+publishing {
+    publications {
+        brailleZephyr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
 application {
-	mainClass = "org.aph.braillezephyr.Main"
+    mainClass = "org.aph.braillezephyr.Main"
 }
 
 String swtOS
-switch(JnaPlatform.getOSType()) {
-	case JnaPlatform.WINDOWS:
-		swtOS = "win32.win32"
-		break
-	case JnaPlatform.MAC:
-		swtOS = "cocoa.macosx"
-		break
-	case JnaPlatform.LINUX:
-		swtOS = "gtk.linux"
-		break
-	default:
-		throw new RuntimeException("Unsupported OS")
+switch (JnaPlatform.getOSType()) {
+    case JnaPlatform.WINDOWS:
+        swtOS = "win32.win32"
+        break
+    case JnaPlatform.MAC:
+        swtOS = "cocoa.macosx"
+        break
+    case JnaPlatform.LINUX:
+        swtOS = "gtk.linux"
+        break
+    default:
+        throw new RuntimeException("Unsupported OS")
 }
 String swtArch
 if (JnaPlatform.isIntel()) {
-	swtArch = JnaPlatform.is64Bit() ? "x86_64" : "x86"
+    swtArch = JnaPlatform.is64Bit() ? "x86_64" : "x86"
 } else if (JnaPlatform.isARM() && JnaPlatform.is64Bit()) {
-	swtArch = "aarch64"
+    swtArch = "aarch64"
 } else {
-	throw new RuntimeException("Unsupported architecture")
+    throw new RuntimeException("Unsupported architecture")
 }
 
 String swtVersion = "3.124.+"
 String swtPlatform = "${swtOS}.${swtArch}"
 if (JnaPlatform.isMac()) {
-	application.applicationDefaultJvmArgs.add("-XstartOnFirstThread")
+    application.applicationDefaultJvmArgs.add("-XstartOnFirstThread")
 }
 
 configurations.all {
-	resolutionStrategy {
-		dependencySubstitution {
-			substitute module("org.eclipse.platform:org.eclipse.swt.\${osgi.platform}") using module("org.eclipse.platform:org.eclipse.swt.${swtPlatform}:${swtVersion}")
-		}
-	}
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute module("org.eclipse.platform:org.eclipse.swt.\${osgi.platform}") using module("org.eclipse.platform:org.eclipse.swt.${swtPlatform}:${swtVersion}")
+        }
+    }
 }
 
 dependencies {
-	implementation("org.eclipse.platform:org.eclipse.swt:${swtVersion}")
+    implementation("org.eclipse.platform:org.eclipse.swt:${swtVersion}")
 }
 
 ext.defaultManifest = java.manifest {
-	attributes("Main-Class": application.mainClass,
-	           "Implementation-Version": version)
+    attributes("Main-Class": application.mainClass,
+            "Implementation-Version": version)
 }
 
 tasks.jar {
-	manifest = project.java.manifest {
-		from(defaultManifest)
-	}
+    manifest = project.java.manifest {
+        from(defaultManifest)
+    }
 
-	archiveBaseName = "BrailleZephyr"
+    archiveBaseName = "BrailleZephyr"
 }
 
 tasks.register("copyDependencies", Copy) {
-	from(configurations.runtimeClasspath)
-	into("${layout.buildDirectory.get()}/jpackage-app")
+    from(configurations.runtimeClasspath)
+    into("${layout.buildDirectory.get()}/jpackage-app")
 }
 
 tasks.register("copyJar", Copy) {
-	from(tasks.jar)
-	into("${layout.buildDirectory.get()}/jpackage-app")
+    from(tasks.jar)
+    into("${layout.buildDirectory.get()}/jpackage-app")
 }
 
 tasks.jpackage {
-	dependsOn("build", "copyDependencies", "copyJar")
-	verbose = true
-	input = "${layout.buildDirectory.get()}/jpackage-app"
-	destination = "${layout.buildDirectory.get()}/dist"
-	appName = "BrailleZephyr"
-	appVersion = version
-	vendor = "American Printing House for the Blind"
-	mainJar = tasks.jar.archiveFileName.get()
-	mainClass = application.mainClass.get()
-	javaOptions = application.applicationDefaultJvmArgs.asList()
-	addModules = [ "java.desktop" ]
-	windows {
-		winDirChooser = true
-		winMenu = true
-		winShortcut = true
-		winShortcutPrompt = true
-		winConsole = false
-	}
-	mac {
-		type = org.panteleyev.jpackage.ImageType.APP_IMAGE
-		macAppStore = false
-		macPackageIdentifier = "org.aph.BrailleZephyr"
-		macPackageName = "BrailleZephyr"
-		macSign = false
-	}
+    dependsOn("build", "copyDependencies", "copyJar")
+    verbose = true
+    input = "${layout.buildDirectory.get()}/jpackage-app"
+    destination = "${layout.buildDirectory.get()}/dist"
+    appName = "BrailleZephyr"
+    appVersion = version
+    vendor = "American Printing House for the Blind"
+    mainJar = tasks.jar.archiveFileName.get()
+    mainClass = application.mainClass.get()
+    javaOptions = application.applicationDefaultJvmArgs.asList()
+    addModules = ["java.desktop"]
+    windows {
+        winDirChooser = true
+        winMenu = true
+        winShortcut = true
+        winShortcutPrompt = true
+        winConsole = false
+    }
+    mac {
+        type = org.panteleyev.jpackage.ImageType.APP_IMAGE
+        macAppStore = false
+        macPackageIdentifier = "org.aph.BrailleZephyr"
+        macPackageName = "BrailleZephyr"
+        macSign = false
+    }
 }
 run {
-	systemProperties["braillezephyr.version"] = version
+    systemProperties["braillezephyr.version"] = version
 }
 
 tasks.wrapper {
-	gradleVersion = "8.5"
+    gradleVersion = "8.5"
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
