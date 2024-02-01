@@ -34,6 +34,11 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: jpackage
+    - name: Upload binary artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: BrailleBlaster-linux
+        path: build/dist/*
 
   buildWinX64:
 
@@ -52,6 +57,11 @@ jobs:
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
           arguments: jpackage
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BrailleBlaster-windows
+          path: build/dist/*
 
   buildMacOsxX64:
 
@@ -70,3 +80,8 @@ jobs:
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
           arguments: jpackage
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BrailleBlaster-macosx
+          path: build/dist/*
