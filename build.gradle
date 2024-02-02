@@ -23,6 +23,7 @@ buildscript {
 }
 
 import com.sun.jna.Platform as JnaPlatform
+import org.panteleyev.jpackage.ImageType
 
 plugins {
     id "java"
@@ -79,7 +80,7 @@ if (JnaPlatform.isMac()) {
     application.applicationDefaultJvmArgs.add("-XstartOnFirstThread")
 }
 
-configurations.all {
+configurations.configureEach {
     resolutionStrategy {
         dependencySubstitution {
             substitute module("org.eclipse.platform:org.eclipse.swt.\${osgi.platform}") using module("org.eclipse.platform:org.eclipse.swt.${swtPlatform}:${swtVersion}")
@@ -134,7 +135,7 @@ tasks.jpackage {
         winConsole = false
     }
     mac {
-        type = org.panteleyev.jpackage.ImageType.APP_IMAGE
+        type = ImageType.APP_IMAGE
         macAppStore = false
         macPackageIdentifier = "org.aph.BrailleZephyr"
         macPackageName = "BrailleZephyr"

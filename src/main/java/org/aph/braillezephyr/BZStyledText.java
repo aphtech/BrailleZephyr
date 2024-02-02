@@ -1051,7 +1051,7 @@ public class BZStyledText {
                 //   build replacement text
                 int length = line.length();
                 stringBuilder.setLength(0);
-                stringBuilder.append(line.substring(0, wordEnd)).append(eol).append(line.substring(wordWrap, length));
+                stringBuilder.append(line, 0, wordEnd).append(eol).append(line, wordWrap, length);
                 if (length > 0 && line.charAt(length - 1) != PARAGRAPH_END) {
                     if (i < content.getLineCount() - 1) {
                         String next = content.getLine(i + 1);
@@ -1363,32 +1363,32 @@ public class BZStyledText {
             else switch (event.character) {
                 case 'f':
 
-                    dotState &= ~0x01;
+                    dotState &= (char) ~0x01;
                     break;
 
                 case 'd':
 
-                    dotState &= ~0x02;
+                    dotState &= (char) ~0x02;
                     break;
 
                 case 's':
 
-                    dotState &= ~0x04;
+                    dotState &= (char) ~0x04;
                     break;
 
                 case 'j':
 
-                    dotState &= ~0x08;
+                    dotState &= (char) ~0x08;
                     break;
 
                 case 'k':
 
-                    dotState &= ~0x10;
+                    dotState &= (char) ~0x10;
                     break;
 
                 case 'l':
 
-                    dotState &= ~0x20;
+                    dotState &= (char) ~0x20;
                     break;
             }
 

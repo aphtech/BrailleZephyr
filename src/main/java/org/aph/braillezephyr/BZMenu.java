@@ -372,11 +372,6 @@ public final class BZMenu extends BZBase {
                 if (bzStyledText.getBrailleVisible()) {
                     bzStyledText.setBrailleVisible(false);
                     brailleItem.setText("Show Braille");
-//					if(!bzStyledText.getAsciiVisible())
-//					{
-//						bzStyledText.setAsciiVisible(true);
-//						ascii.setText("Hide ASCII");
-//					}
                 } else {
                     bzStyledText.setBrailleVisible(true);
                     brailleItem.setText("Hide Braille");
@@ -385,11 +380,6 @@ public final class BZMenu extends BZBase {
                 if (bzStyledText.getAsciiVisible()) {
                     bzStyledText.setAsciiVisible(false);
                     asciiItem.setText("Show ASCII");
-//					if(!bzStyledText.getBrailleVisible())
-//					{
-//						bzStyledText.setBrailleVisible(true);
-//						braille.setText("Hide Braille");
-//					}
                 } else {
                     bzStyledText.setAsciiVisible(true);
                     asciiItem.setText("Hide ASCII");
