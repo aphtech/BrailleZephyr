@@ -37,7 +37,7 @@ jobs:
     - name: Upload binary artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: BrailleBlaster-linux
+        name: BrailleZephyr-linux
         path: build/dist/*
 
   buildWinX64:
@@ -60,7 +60,7 @@ jobs:
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BrailleBlaster-windows
+          name: BrailleZephyr-windows
           path: build/dist/*
 
   buildMacOsxX64:
@@ -83,5 +83,5 @@ jobs:
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BrailleBlaster-macosx
+          name: BrailleZephyr-macosx
           path: build/dist/*
