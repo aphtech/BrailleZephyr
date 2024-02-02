@@ -428,7 +428,6 @@ public final class BZMenu extends BZBase {
     private final class LinesPerPageDialog implements SelectionListener, KeyListener {
         private final Shell shell;
         private final Button okButton;
-        private final Button cancelButton;
         private final Spinner spinner;
 
         private LinesPerPageDialog(Shell parentShell) {
@@ -446,7 +445,7 @@ public final class BZMenu extends BZBase {
             okButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             okButton.addSelectionListener(this);
 
-            cancelButton = new Button(shell, SWT.PUSH);
+            Button cancelButton = new Button(shell, SWT.PUSH);
             cancelButton.setText("Cancel");
             cancelButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             cancelButton.addSelectionListener(this);
@@ -500,7 +499,6 @@ public final class BZMenu extends BZBase {
     private final class CharsPerLineDialog implements SelectionListener, KeyListener {
         private final Shell shell;
         private final Button okButton;
-        private final Button cancelButton;
         private final Spinner spinner;
 
         private CharsPerLineDialog(Shell parentShell) {
@@ -518,7 +516,7 @@ public final class BZMenu extends BZBase {
             okButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             okButton.addSelectionListener(this);
 
-            cancelButton = new Button(shell, SWT.PUSH);
+            Button cancelButton = new Button(shell, SWT.PUSH);
             cancelButton.setText("Cancel");
             cancelButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             cancelButton.addSelectionListener(this);
@@ -573,7 +571,6 @@ public final class BZMenu extends BZBase {
     private final class LineMarginBellDialog implements SelectionListener, KeyListener {
         private final Shell shell;
         private final Button okButton;
-        private final Button cancelButton;
         private final Spinner spinner;
 
         private LineMarginBellDialog(Shell parentShell) {
@@ -591,7 +588,7 @@ public final class BZMenu extends BZBase {
             okButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             okButton.addSelectionListener(this);
 
-            cancelButton = new Button(shell, SWT.PUSH);
+            Button cancelButton = new Button(shell, SWT.PUSH);
             cancelButton.setText("Cancel");
             cancelButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             cancelButton.addSelectionListener(this);
@@ -644,7 +641,6 @@ public final class BZMenu extends BZBase {
     private final class PageMarginBellDialog implements SelectionListener, KeyListener {
         private final Shell shell;
         private final Button okButton;
-        private final Button cancelButton;
         private final Spinner spinner;
 
         private PageMarginBellDialog(Shell parentShell) {
@@ -662,7 +658,7 @@ public final class BZMenu extends BZBase {
             okButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             okButton.addSelectionListener(this);
 
-            cancelButton = new Button(shell, SWT.PUSH);
+            Button cancelButton = new Button(shell, SWT.PUSH);
             cancelButton.setText("Cancel");
             cancelButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             cancelButton.addSelectionListener(this);
@@ -775,10 +771,8 @@ public final class BZMenu extends BZBase {
     }
 
     private final class LogViewerDialog {
-        private final Shell parentShell;
 
         private LogViewerDialog(Shell parentShell) {
-            this.parentShell = parentShell;
 
             Shell dialog = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
             dialog.setLayout(new FillLayout());
